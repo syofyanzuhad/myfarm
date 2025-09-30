@@ -36,4 +36,9 @@ class Animal extends Model
     {
         return $this->hasMany(EggProduction::class);
     }
+
+    public function feedRecords(): HasMany
+    {
+        return $this->hasMany(FeedRecord::class);
+    }
 }
