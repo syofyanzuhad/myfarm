@@ -2,17 +2,17 @@
 
 namespace App\Filament\Resources\HealthRecords\Schemas;
 
-use Filament\Schemas\Components\DatePicker;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Select;
-use Filament\Schemas\Components\Textarea;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Form;
 
 class HealthRecordForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
+        return $form
             ->components([
                 Section::make('Informasi Rekam Kesehatan')
                     ->schema([
