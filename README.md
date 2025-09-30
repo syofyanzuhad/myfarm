@@ -1,61 +1,263 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MyFarm - Sistem Manajemen Peternakan
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+    <img src="public/icon-512.svg" width="200" alt="MyFarm Logo">
 </p>
 
-## About Laravel
+Aplikasi web modern untuk manajemen peternakan terintegrasi dengan monitoring real-time untuk ayam, entok, dan ikan. Dibangun menggunakan Laravel 12 dan Filament v4.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📊 Dashboard & Analytics
+- **Dashboard Interaktif** dengan widget statistik real-time
+- **Total Hewan per Jenis** (Ayam, Entok, Ikan)
+- **Grafik Produksi Telur** per minggu (Line Chart)
+- **Grafik Konsumsi Pakan** per bulan (Bar Chart)
+- **Jumlah Hewan Sakit** dalam 30 hari terakhir
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🐔 Manajemen Data
+- **Data Peternak**: Profil lengkap dengan kontak dan alamat
+- **Data Hewan Ternak**: Type, jumlah, status kesehatan, dan cage assignment
+- **Produksi Telur**: Tracking harian dengan catatan
+- **Konsumsi Pakan**: Monitoring jenis, jumlah, dan satuan pakan
+- **Catatan Kesehatan**: Vaksinasi, penyakit, dan pengobatan
+- **Manajemen Kandang**: Kapasitas dan alokasi
 
-## Learning Laravel
+### 📱 Mobile-Friendly & PWA
+- **Responsive Design**: Optimized untuk desktop, tablet, dan mobile
+- **Progressive Web App**: Install sebagai aplikasi standalone
+- **Offline Support**: Basic caching untuk mode offline
+- **Touch-Optimized**: Scrolling dan navigation yang smooth di mobile
+- **Collapsible Sidebar**: Auto-collapse untuk screen kecil
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 📄 Laporan & Export
+- **Laporan Produksi Telur**
+  - Filter berdasarkan tanggal
+  - Export ke PDF dan Excel
+  - Ringkasan total produksi
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Laporan Pakan**
+  - Filter berdasarkan hewan dan tanggal
+  - Export ke Excel
+  - Analisis konsumsi per hewan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Laporan Kesehatan**
+  - Filter berdasarkan tanggal
+  - Export ke PDF
+  - Tracking vaksinasi dan treatment
 
-## Laravel Sponsors
+### 🔔 Sistem Notifikasi
+- **Notifikasi Database** terintegrasi dengan Filament UI
+- **Pengingat Vaksinasi H-1**: Otomatis mengirim notifikasi sehari sebelum jadwal vaksinasi
+- **Peringatan Stok Pakan**: Alert otomatis jika konsumsi melebihi threshold (100kg/7 hari)
+- **Real-time Polling**: Update notifikasi setiap 30 detik
+- **Bell Icon**: Menampilkan badge unread notifications
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 👥 Role-Based Access Control
+Menggunakan **Spatie Laravel Permission** dengan 3 role:
+- **Admin**: Full access ke semua fitur
+- **Peternak**: Akses terbatas ke data milik sendiri
+- **Petugas**: Monitoring dan input data lapangan
 
-### Premium Partners
+### 🌙 Dark Mode
+- Full dark mode support
+- Auto-sync dengan system preferences
+- Toggle manual available
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🛠️ Tech Stack
 
-## Contributing
+- **Laravel 12.31.1** - PHP Framework
+- **PHP 8.3.24**
+- **Filament v4** - Admin Panel Framework
+- **Tailwind CSS v4** - Styling
+- **Chart.js** - Data Visualization
+- **SQLite/MySQL** - Database (compatible dengan keduanya)
+- **Pest v4** - Testing Framework
+- **Laravel Pint** - Code Formatting
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Packages
+- `filament/filament` - Admin panel builder
+- `bezhansalleh/filament-shield` - Role & permission management
+- `maatwebsite/excel` - Excel export functionality
+- `barryvdh/laravel-dompdf` - PDF generation
+- `spatie/laravel-permission` - Role-based access control
 
-## Code of Conduct
+## 📦 Installation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Requirements
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- MySQL/SQLite
 
-## Security Vulnerabilities
+### Setup
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Clone repository
+```bash
+git clone <repository-url>
+cd myfarm
+```
 
-## License
+2. Install dependencies
+```bash
+composer install
+npm install
+```
+
+3. Setup environment
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+4. Configure database di `.env`
+```env
+DB_CONNECTION=sqlite
+# atau untuk MySQL:
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=myfarm
+# DB_USERNAME=root
+# DB_PASSWORD=
+```
+
+5. Run migrations & seeders
+```bash
+php artisan migrate --seed
+```
+
+6. Install Filament Shield
+```bash
+php artisan shield:install
+```
+
+7. Build assets
+```bash
+npm run build
+# atau untuk development:
+npm run dev
+```
+
+8. Start server
+```bash
+php artisan serve
+```
+
+9. Setup scheduler (untuk notifikasi vaksinasi)
+```bash
+# Tambahkan ke crontab:
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+## 👤 Default Login
+
+```
+Email: admin@example.com
+Password: password
+```
+
+## 📱 PWA Installation
+
+### Desktop (Chrome/Edge)
+1. Buka aplikasi di browser
+2. Klik icon install di address bar (sebelah bookmark)
+3. Klik "Install"
+
+### Mobile (Android/iOS)
+1. Buka aplikasi di browser
+2. Tap menu (3 dots)
+3. Pilih "Add to Home Screen" atau "Install App"
+4. Launch dari home screen untuk experience seperti native app
+
+## 🔧 Development
+
+### Run tests
+```bash
+php artisan test
+```
+
+### Format code
+```bash
+vendor/bin/pint
+```
+
+### Clear cache
+```bash
+php artisan optimize:clear
+```
+
+### Rebuild cache
+```bash
+php artisan optimize
+```
+
+## 📈 Scheduled Commands
+
+### Vaccine Reminders
+Command yang berjalan setiap hari jam 08:00 untuk mengirim notifikasi vaksinasi H-1:
+```bash
+php artisan reminders:vaccine
+```
+
+## 🎨 Customization
+
+### Theme Colors
+Edit `app/Providers/Filament/AdminPanelProvider.php`:
+```php
+->colors([
+    'primary' => Color::Amber, // Ganti sesuai keinginan
+])
+```
+
+### Mobile Optimization
+Edit `resources/css/filament/admin/theme.css` untuk custom mobile styles.
+
+### PWA Configuration
+Edit `public/manifest.json` untuk custom app name, colors, dan icons.
+
+## 📊 Database Schema
+
+### Main Tables
+- `users` - User accounts
+- `farmers` - Data peternak
+- `animals` - Data hewan ternak
+- `cages` - Data kandang
+- `egg_productions` - Produksi telur harian
+- `feed_records` - Catatan pemberian pakan
+- `health_records` - Catatan kesehatan & vaksinasi
+- `notifications` - Database notifications
+
+## 🔒 Security
+
+- CSRF Protection
+- Authentication & Authorization
+- Role-based access control
+- Input validation
+- SQL Injection prevention (Eloquent ORM)
+- XSS Protection
+
+## 🌐 Browser Support
+
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+
+## 📝 License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+This project is built on top of Laravel and follows the same license.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Support
+
+For support, email admin@myfarm.com or open an issue on GitHub.
+
+---
+
+**Built with ❤️ using Laravel & Filament**
