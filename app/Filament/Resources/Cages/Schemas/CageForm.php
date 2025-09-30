@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Cages\Schemas;
 
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Select;
+use Filament\Schemas\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class CageForm
