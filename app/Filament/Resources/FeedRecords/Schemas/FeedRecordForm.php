@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\FeedRecords\Schemas;
 
-use Filament\Schemas\Components\DatePicker;
-use Filament\Schemas\Components\Select;
-use Filament\Schemas\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class FeedRecordForm

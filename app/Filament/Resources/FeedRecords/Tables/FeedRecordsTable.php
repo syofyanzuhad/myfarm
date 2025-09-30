@@ -78,9 +78,9 @@ class FeedRecordsTable
                     ->preload(),
                 Filter::make('date')
                     ->form([
-                        \Filament\Schemas\Components\DatePicker::make('from')
+                        \Filament\Forms\Components\DatePicker::make('from')
                             ->label('Dari Tanggal'),
-                        \Filament\Schemas\Components\DatePicker::make('until')
+                        \Filament\Forms\Components\DatePicker::make('until')
                             ->label('Sampai Tanggal'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
