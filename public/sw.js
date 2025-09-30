@@ -9,19 +9,47 @@ const urlsToCache = [
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(urlsToCache))
+            .then(cache => {
+                // Use relative URLs, browser will resolve with correct protocol
+                return cache.addAll(urlsToCache);
+            })
+            .catch(error => {
+                console.log('Cache install failed:', error);
+            })
     );
+    // Force immediate activation
+    self.skipWaiting();
 });
 
-// Fetch event
+// Fetch event - Only cache GET requests and same-origin
 self.addEventListener('fetch', event => {
+    // Skip non-GET requests and cross-origin requests
+    if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request)
             .then(response => {
                 if (response) {
                     return response;
                 }
-                return fetch(event.request);
+                // Fetch and cache for next time
+                return fetch(event.request).then(fetchResponse => {
+                    // Only cache successful responses
+                    if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
+                        return fetchResponse;
+                    }
+                    const responseToCache = fetchResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+                    return fetchResponse;
+                });
+            })
+            .catch(() => {
+                // Return a basic offline page if available
+                return caches.match('/admin');
             })
     );
 });
@@ -37,6 +65,9 @@ self.addEventListener('activate', event => {
                     }
                 })
             );
+        }).then(() => {
+            // Take control of all pages immediately
+            return self.clients.claim();
         })
     );
 });
