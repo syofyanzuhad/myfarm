@@ -153,7 +153,7 @@ php artisan serve
 ## 👤 Default Login
 
 ```
-Email: admin@example.com
+Email: admin@myfarm.com
 Password: password
 ```
 
@@ -256,7 +256,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Support
 
-For support, email admin@myfarm.com or open an issue on GitHub.
+For support, email mail@syofyanzuhad.dev or open an issue on GitHub.
 
 ---
 
