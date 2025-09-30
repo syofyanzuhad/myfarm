@@ -193,18 +193,29 @@ class AppServiceProvider extends ServiceProvider
                     const dismissBtn = document.getElementById('pwa-dismiss-btn');
                     const closeBtn = document.getElementById('pwa-close-btn');
 
-                    // Service Worker Registration
+                    // Service Worker Registration - DISABLED temporarily
+                    // Unregister existing service workers
                     if ('serviceWorker' in navigator) {
-                        window.addEventListener('load', function() {
-                            navigator.serviceWorker.register('/sw.js')
-                                .then(function(registration) {
-                                    console.log('ServiceWorker registered:', registration.scope);
-                                })
-                                .catch(function(error) {
-                                    console.log('ServiceWorker registration failed:', error);
+                        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                            for(let registration of registrations) {
+                                registration.unregister().then(function(success) {
+                                    console.log('ServiceWorker unregistered:', success);
                                 });
+                            }
                         });
                     }
+
+                    // if ('serviceWorker' in navigator) {
+                    //     window.addEventListener('load', function() {
+                    //         navigator.serviceWorker.register('/sw.js')
+                    //             .then(function(registration) {
+                    //                 console.log('ServiceWorker registered:', registration.scope);
+                    //             })
+                    //             .catch(function(error) {
+                    //                 console.log('ServiceWorker registration failed:', error);
+                    //             });
+                    //     });
+                    // }
 
                     // PWA Install Prompt
                     window.addEventListener('beforeinstallprompt', (e) => {
