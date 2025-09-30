@@ -8,10 +8,11 @@ use App\Models\FeedRecord;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -22,8 +23,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Facades\Excel;
 
-class FeedReport extends Page implements HasTable
+class FeedReport extends Page implements HasForms, HasTable
 {
+    use InteractsWithForms;
     use InteractsWithTable;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
@@ -46,23 +48,20 @@ class FeedReport extends Page implements HasTable
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Section::make('Filter Laporan')
-                    ->schema([
-                        Select::make('animal_id')
-                            ->label('Hewan Ternak')
-                            ->options(Animal::with('farmer')->get()->mapWithKeys(fn ($animal) => [$animal->id => "{$animal->farmer->name} - {$animal->type}"]))
-                            ->searchable(),
-                        DatePicker::make('start_date')
-                            ->label('Dari Tanggal'),
-                        DatePicker::make('end_date')
-                            ->label('Sampai Tanggal'),
-                    ])
-                    ->columns(3),
+        return $schema
+            ->components([
+                Select::make('animal_id')
+                    ->label('Hewan Ternak')
+                    ->options(Animal::with('farmer')->get()->mapWithKeys(fn ($animal) => [$animal->id => "{$animal->farmer->name} - {$animal->type}"]))
+                    ->searchable(),
+                DatePicker::make('start_date')
+                    ->label('Dari Tanggal'),
+                DatePicker::make('end_date')
+                    ->label('Sampai Tanggal'),
             ])
+            ->columns(3)
             ->statePath('data');
     }
 

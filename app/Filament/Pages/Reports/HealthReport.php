@@ -7,9 +7,10 @@ use BackedEnum;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -19,8 +20,9 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class HealthReport extends Page implements HasTable
+class HealthReport extends Page implements HasForms, HasTable
 {
+    use InteractsWithForms;
     use InteractsWithTable;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
@@ -43,19 +45,16 @@ class HealthReport extends Page implements HasTable
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Section::make('Filter Laporan')
-                    ->schema([
-                        DatePicker::make('start_date')
-                            ->label('Dari Tanggal'),
-                        DatePicker::make('end_date')
-                            ->label('Sampai Tanggal'),
-                    ])
-                    ->columns(2),
+        return $schema
+            ->components([
+                DatePicker::make('start_date')
+                    ->label('Dari Tanggal'),
+                DatePicker::make('end_date')
+                    ->label('Sampai Tanggal'),
             ])
+            ->columns(2)
             ->statePath('data');
     }
 
