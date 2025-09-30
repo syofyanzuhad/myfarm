@@ -47,4 +47,9 @@ class Animal extends Model
     {
         return $this->belongsTo(Cage::class);
     }
+
+    public function healthRecords(): HasMany
+    {
+        return $this->hasMany(HealthRecord::class);
+    }
 }
