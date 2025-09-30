@@ -1,7 +1,5 @@
-const CACHE_NAME = 'myfarm-v1';
+const CACHE_NAME = 'myfarm-v2'; // Increment version to force cache refresh
 const urlsToCache = [
-    '/admin',
-    '/admin/login',
     '/manifest.json'
 ];
 
@@ -10,7 +8,7 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                // Use relative URLs, browser will resolve with correct protocol
+                // Only cache static assets, not HTML pages
                 return cache.addAll(urlsToCache);
             })
             .catch(error => {
@@ -21,36 +19,60 @@ self.addEventListener('install', event => {
     self.skipWaiting();
 });
 
-// Fetch event - Only cache GET requests and same-origin
+// Fetch event - Network-first strategy for HTML, cache for static assets
 self.addEventListener('fetch', event => {
+    const url = new URL(event.request.url);
+
     // Skip non-GET requests and cross-origin requests
     if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
         return;
     }
 
+    // Never cache HTML pages or API calls (prevents stale CSRF tokens)
+    const neverCache = [
+        '/livewire/',
+        '/admin',
+        '/login'
+    ];
+
+    if (neverCache.some(path => url.pathname.includes(path)) ||
+        event.request.headers.get('accept')?.includes('text/html')) {
+        // Network-first: always fetch fresh HTML and Livewire requests
+        event.respondWith(fetch(event.request));
+        return;
+    }
+
+    // Cache-first strategy for static assets only (CSS, JS, images)
     event.respondWith(
         caches.match(event.request)
             .then(response => {
                 if (response) {
                     return response;
                 }
-                // Fetch and cache for next time
+                // Fetch and cache static assets
                 return fetch(event.request).then(fetchResponse => {
-                    // Only cache successful responses
-                    if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
+                    if (!fetchResponse || fetchResponse.status !== 200) {
                         return fetchResponse;
                     }
-                    const responseToCache = fetchResponse.clone();
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, responseToCache);
-                    });
+
+                    // Only cache static assets (JS, CSS, images, fonts)
+                    const contentType = fetchResponse.headers.get('content-type');
+                    if (contentType && (
+                        contentType.includes('javascript') ||
+                        contentType.includes('css') ||
+                        contentType.includes('image') ||
+                        contentType.includes('font')
+                    )) {
+                        const responseToCache = fetchResponse.clone();
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(event.request, responseToCache);
+                        });
+                    }
+
                     return fetchResponse;
                 });
             })
-            .catch(() => {
-                // Return a basic offline page if available
-                return caches.match('/admin');
-            })
+            .catch(() => fetch(event.request))
     );
 });
 
