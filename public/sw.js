@@ -1,78 +1,52 @@
-const CACHE_NAME = 'myfarm-v2'; // Increment version to force cache refresh
-const urlsToCache = [
-    '/manifest.json'
-];
+const CACHE_NAME = 'myfarm-v3';
 
 // Install event
 self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                // Only cache static assets, not HTML pages
-                return cache.addAll(urlsToCache);
-            })
-            .catch(error => {
-                console.log('Cache install failed:', error);
-            })
-    );
-    // Force immediate activation
+    // Skip waiting to activate immediately
     self.skipWaiting();
 });
 
-// Fetch event - Network-first strategy for HTML, cache for static assets
+// Fetch event - Minimal intervention, only cache static assets
 self.addEventListener('fetch', event => {
-    const url = new URL(event.request.url);
-
-    // Skip non-GET requests and cross-origin requests
+    // Only handle GET requests from same origin
     if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
         return;
     }
 
-    // Never cache HTML pages or API calls (prevents stale CSRF tokens)
-    const neverCache = [
-        '/livewire/',
-        '/admin',
-        '/login'
-    ];
+    const url = new URL(event.request.url);
 
-    if (neverCache.some(path => url.pathname.includes(path)) ||
+    // NEVER intercept HTML pages, Livewire, or admin routes
+    // Let browser handle them naturally to avoid CSRF issues
+    if (url.pathname.startsWith('/livewire') ||
+        url.pathname.startsWith('/admin') ||
+        url.pathname.includes('/login') ||
         event.request.headers.get('accept')?.includes('text/html')) {
-        // Network-first: always fetch fresh HTML and Livewire requests
-        event.respondWith(fetch(event.request));
-        return;
+        return; // Don't intercept, let browser handle
     }
 
-    // Cache-first strategy for static assets only (CSS, JS, images)
+    // Only cache JS, CSS, images, fonts with network-first strategy
+    const cacheable = /\.(js|css|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/i.test(url.pathname);
+
+    if (!cacheable) {
+        return; // Don't intercept
+    }
+
+    // Network-first strategy for static assets
     event.respondWith(
-        caches.match(event.request)
+        fetch(event.request)
             .then(response => {
-                if (response) {
-                    return response;
+                if (response && response.status === 200) {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
                 }
-                // Fetch and cache static assets
-                return fetch(event.request).then(fetchResponse => {
-                    if (!fetchResponse || fetchResponse.status !== 200) {
-                        return fetchResponse;
-                    }
-
-                    // Only cache static assets (JS, CSS, images, fonts)
-                    const contentType = fetchResponse.headers.get('content-type');
-                    if (contentType && (
-                        contentType.includes('javascript') ||
-                        contentType.includes('css') ||
-                        contentType.includes('image') ||
-                        contentType.includes('font')
-                    )) {
-                        const responseToCache = fetchResponse.clone();
-                        caches.open(CACHE_NAME).then(cache => {
-                            cache.put(event.request, responseToCache);
-                        });
-                    }
-
-                    return fetchResponse;
-                });
+                return response;
             })
-            .catch(() => fetch(event.request))
+            .catch(() => {
+                // On network failure, try cache
+                return caches.match(event.request);
+            })
     );
 });
 
