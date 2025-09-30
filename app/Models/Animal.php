@@ -14,6 +14,7 @@ class Animal extends Model
 
     protected $fillable = [
         'farmer_id',
+        'cage_id',
         'type',
         'quantity',
         'date_acquired',
@@ -40,5 +41,10 @@ class Animal extends Model
     public function feedRecords(): HasMany
     {
         return $this->hasMany(FeedRecord::class);
+    }
+
+    public function cage(): BelongsTo
+    {
+        return $this->belongsTo(Cage::class);
     }
 }

@@ -29,4 +29,9 @@ class Farmer extends Model
     {
         return $this->hasMany(Animal::class);
     }
+
+    public function cages(): HasMany
+    {
+        return $this->hasMany(Cage::class);
+    }
 }
