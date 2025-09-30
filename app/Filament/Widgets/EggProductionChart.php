@@ -12,17 +12,33 @@ class EggProductionChart extends ChartWidget
 
     protected function getData(): array
     {
-        $weeklyData = EggProduction::query()
-            ->select(
-                DB::raw('WEEK(date) as week'),
-                DB::raw('YEAR(date) as year'),
-                DB::raw('SUM(quantity) as total')
-            )
-            ->where('date', '>=', now()->subWeeks(12))
-            ->groupBy('year', 'week')
-            ->orderBy('year', 'asc')
-            ->orderBy('week', 'asc')
-            ->get();
+        $driver = DB::connection()->getDriverName();
+
+        if ($driver === 'sqlite') {
+            $weeklyData = EggProduction::query()
+                ->select(
+                    DB::raw("CAST(strftime('%W', date) as INTEGER) as week"),
+                    DB::raw("CAST(strftime('%Y', date) as INTEGER) as year"),
+                    DB::raw('SUM(quantity) as total')
+                )
+                ->where('date', '>=', now()->subWeeks(12))
+                ->groupBy('year', 'week')
+                ->orderBy('year', 'asc')
+                ->orderBy('week', 'asc')
+                ->get();
+        } else {
+            $weeklyData = EggProduction::query()
+                ->select(
+                    DB::raw('WEEK(date) as week'),
+                    DB::raw('YEAR(date) as year'),
+                    DB::raw('SUM(quantity) as total')
+                )
+                ->where('date', '>=', now()->subWeeks(12))
+                ->groupBy('year', 'week')
+                ->orderBy('year', 'asc')
+                ->orderBy('week', 'asc')
+                ->get();
+        }
 
         $labels = [];
         $data = [];

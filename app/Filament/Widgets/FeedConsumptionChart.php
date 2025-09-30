@@ -12,17 +12,33 @@ class FeedConsumptionChart extends ChartWidget
 
     protected function getData(): array
     {
-        $monthlyData = FeedRecord::query()
-            ->select(
-                DB::raw('MONTH(date) as month'),
-                DB::raw('YEAR(date) as year'),
-                DB::raw('SUM(CASE WHEN unit = "kg" THEN quantity WHEN unit = "gram" THEN quantity/1000 ELSE 0 END) as total_kg')
-            )
-            ->where('date', '>=', now()->subMonths(12))
-            ->groupBy('year', 'month')
-            ->orderBy('year', 'asc')
-            ->orderBy('month', 'asc')
-            ->get();
+        $driver = DB::connection()->getDriverName();
+
+        if ($driver === 'sqlite') {
+            $monthlyData = FeedRecord::query()
+                ->select(
+                    DB::raw("CAST(strftime('%m', date) as INTEGER) as month"),
+                    DB::raw("CAST(strftime('%Y', date) as INTEGER) as year"),
+                    DB::raw('SUM(CASE WHEN unit = "kg" THEN quantity WHEN unit = "gram" THEN quantity/1000 ELSE 0 END) as total_kg')
+                )
+                ->where('date', '>=', now()->subMonths(12))
+                ->groupBy('year', 'month')
+                ->orderBy('year', 'asc')
+                ->orderBy('month', 'asc')
+                ->get();
+        } else {
+            $monthlyData = FeedRecord::query()
+                ->select(
+                    DB::raw('MONTH(date) as month'),
+                    DB::raw('YEAR(date) as year'),
+                    DB::raw('SUM(CASE WHEN unit = "kg" THEN quantity WHEN unit = "gram" THEN quantity/1000 ELSE 0 END) as total_kg')
+                )
+                ->where('date', '>=', now()->subMonths(12))
+                ->groupBy('year', 'month')
+                ->orderBy('year', 'asc')
+                ->orderBy('month', 'asc')
+                ->get();
+        }
 
         $labels = [];
         $data = [];
