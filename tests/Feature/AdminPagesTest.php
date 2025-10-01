@@ -127,3 +127,67 @@ it('allows admin to access health report', function () {
         ->get('/admin/health-report')
         ->assertSuccessful();
 });
+
+it('allows admin to access animals edit page', function () {
+    $farmer = \App\Models\Farmer::factory()->create();
+    $animal = \App\Models\Animal::factory()->create(['farmer_id' => $farmer->id]);
+
+    $this->actingAs($this->admin)
+        ->get("/admin/animals/{$animal->id}/edit")
+        ->assertSuccessful();
+});
+
+it('allows admin to access cages edit page', function () {
+    $cage = \App\Models\Cage::factory()->create();
+
+    $this->actingAs($this->admin)
+        ->get("/admin/cages/{$cage->id}/edit")
+        ->assertSuccessful();
+});
+
+it('allows admin to access egg productions edit page', function () {
+    $farmer = \App\Models\Farmer::factory()->create();
+    $animal = \App\Models\Animal::factory()->create(['farmer_id' => $farmer->id]);
+    $eggProduction = \App\Models\EggProduction::factory()->create(['animal_id' => $animal->id]);
+
+    $this->actingAs($this->admin)
+        ->get("/admin/egg-productions/{$eggProduction->id}/edit")
+        ->assertSuccessful();
+});
+
+it('allows admin to access farmers edit page', function () {
+    $farmer = \App\Models\Farmer::factory()->create();
+
+    $this->actingAs($this->admin)
+        ->get("/admin/farmers/{$farmer->id}/edit")
+        ->assertSuccessful();
+});
+
+it('allows admin to access feed records edit page', function () {
+    $farmer = \App\Models\Farmer::factory()->create();
+    $animal = \App\Models\Animal::factory()->create(['farmer_id' => $farmer->id]);
+    $feedRecord = \App\Models\FeedRecord::factory()->create(['animal_id' => $animal->id]);
+
+    $this->actingAs($this->admin)
+        ->get("/admin/feed-records/{$feedRecord->id}/edit")
+        ->assertSuccessful();
+});
+
+it('allows admin to access health records edit page', function () {
+    $farmer = \App\Models\Farmer::factory()->create();
+    $animal = \App\Models\Animal::factory()->create(['farmer_id' => $farmer->id]);
+    $healthRecord = \App\Models\HealthRecord::factory()->create(['animal_id' => $animal->id]);
+
+    $this->actingAs($this->admin)
+        ->get("/admin/health-records/{$healthRecord->id}/edit")
+        ->assertSuccessful();
+});
+
+it('allows admin to access users edit page', function () {
+    $user = \App\Models\User::factory()->create();
+    $user->assignRole('peternak');
+
+    $this->actingAs($this->admin)
+        ->get("/admin/users/{$user->id}/edit")
+        ->assertSuccessful();
+});
