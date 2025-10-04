@@ -42,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
                 <meta name="theme-color" content="#f59e0b">
                 <link rel="manifest" href="/manifest.json">
                 <link rel="apple-touch-icon" href="/icon-192.svg">
+                <script defer src="https://umami.syofyanzuhad.dev/script.js" data-website-id="58b64bc6-ab8a-4442-be39-d202888d197a"></script>
             HTML)
         );
 
