@@ -13,10 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call([
+            RolePermissionSeeder::class,
+        ]);
 
-        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
-
+        // Create admin user
         $admin = User::updateOrCreate(
             ['email' => 'admin@myfarm.com'],
             [
@@ -27,7 +28,7 @@ class DatabaseSeeder extends Seeder
         );
 
         if (! $admin->hasRole('admin')) {
-            $admin->assignRole($adminRole);
+            $admin->assignRole('admin');
         }
     }
 }
